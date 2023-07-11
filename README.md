@@ -2,6 +2,10 @@ A pathfinding robot that homes towards a beacon (Radio)
 
 Revised version of Nemo
 
+**For those wondering where the code is, check src/main.cpp
+the rest of the stuff is just for the platformIO IDE and the framework to work.**
+
+
 # Features
 - [ ] anti-collision
 - [ ] pathfinding
