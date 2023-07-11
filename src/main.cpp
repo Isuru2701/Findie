@@ -1,6 +1,10 @@
+//libraries
 #include <Arduino.h>
 
 #include <Servo.h>
+
+#include <RH_ASK.h>
+#include <SPI.h> // Not actually used but needed to compile
 
 //function headers
 long scanDistance();
@@ -26,7 +30,10 @@ void turnLeft();
 #define in3 8
 #define in4 7
 
+//objects
 Servo servo;
+
+RH_ASK transmitter;
 
 void setup() {
   // put your setup code here, to run once:
@@ -54,6 +61,9 @@ void setup() {
 	digitalWrite(in3, LOW);
 	digitalWrite(in4, LOW);
 
+//radio stuff
+  transmitter.init();
+
 }
 
 void loop() {
@@ -70,15 +80,36 @@ void loop() {
   delay(500);
 }
 
+//radio stuff
 
 
+//FOR TESTING ONLY- THE ROBOT WILL NOT TRASMIT DATA, IT'LL ONLY RECEIVE
+void transmit(){
+
+  
+
+}
+
+
+//----radio stuff over----//
+
+//receive and decrypts a radio wave
+void receive() {
+
+}
+
+
+
+
+//look around with servo, orient self correctly, reset servo, exit
 void changeDirection(){
 
   //check left
   servo.write(0);
+  long distance = scanDistance();
+
   delay(2000);
 
-  long distance = scanDistance();
   if(distance > 30) {
 
     //turn left
@@ -92,12 +123,13 @@ void changeDirection(){
 
   //check right
   servo.write(180);
+  distance = scanDistance();
+  
   delay(2000);
 
-  distance = scanDistance();
   if(distance > 30) {
 
-    //turn
+    //turn right
     turnRight();
 
     //reset servo position
@@ -140,6 +172,10 @@ long scanDistance() {
 
 }
 
+
+
+
+//lower-level motor functions, pretty standard
 
 void forward() {
 
