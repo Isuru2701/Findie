@@ -8,13 +8,17 @@
 
 //function headers
 long scanDistance();
+
 void changeDirection();
+
 void forward();
 void backward();
 void halt();
 void turnRight();
 void turnLeft();
 
+void transmit();
+void receive();
 
 //PINS ARE ALL DEFINED HERE
 //servo
@@ -34,7 +38,7 @@ void turnLeft();
 Servo servo;
 
 RH_ASK transmitter;
-
+RH_ASK receiver;
 void setup() {
   // put your setup code here, to run once:
 
@@ -63,30 +67,37 @@ void setup() {
 
 //radio stuff
   transmitter.init();
+  receiver.init();
 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
 
-  long distance = scanDistance();
-  if (distance <= 30) {
-    halt();
-    changeDirection();
-  } else { 
+  // long distance = scanDistance();
+  // if (distance <= 30) {
+  //   halt();
+  //   changeDirection();
+  // } else { 
 
-      forward();
-  }
-  delay(500);
+  //     forward();
+  // }
+  // delay(500);
+
+  transmit();
+
+  receive();
 }
 
 //radio stuff
-
-
 //FOR TESTING ONLY- THE ROBOT WILL NOT TRASMIT DATA, IT'LL ONLY RECEIVE
 void transmit(){
 
-  
+  //TESTING ONLY, REPLACE L8R
+  char *msg = "Hello World!";
+  transmitter.send((uint8_t *)msg, strlen(msg));
+  transmitter.waitPacketSent();
+  delay(1000);
 
 }
 
@@ -95,6 +106,16 @@ void transmit(){
 
 //receive and decrypts a radio wave
 void receive() {
+
+  //TEST, REPLACE L8R
+  uint8_t buf[RH_ASK_MAX_MESSAGE_LEN];
+  uint8_t buflen = sizeof(buf);
+  if(receiver.recv(buf, &buflen)) {
+    Serial.print("Message: ");
+    Serial.println((char*)buf);
+  } else {
+    Serial.println("No message received");
+  }
 
 }
 
