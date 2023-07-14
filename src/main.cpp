@@ -1,8 +1,8 @@
 //libraries
 #include <Arduino.h>
-
 #include <Servo.h>
 #include <SPI.h>
+
 //function headers
 long scanDistance();
 
@@ -14,8 +14,8 @@ void halt();
 void turnRight();
 void turnLeft();
 
-void transmit();
-void receive();
+// void transmit();
+// void receive();
 
 //PINS ARE ALL DEFINED HERE
 //servo
@@ -31,8 +31,14 @@ void receive();
 #define in3 8
 #define in4 7
 
+//nodeMCU interaction
+#define nodeMCUInterrupt 2
+
 //objects
 Servo servo;
+
+int beaconID = 0;
+
 void setup() {
   // put your setup code here, to run once:
 
@@ -59,29 +65,28 @@ void setup() {
 	digitalWrite(in3, LOW);
 	digitalWrite(in4, LOW);
 
-//radio stuff
+//nodeMCU interaction
+  pinMode(nodeMCUInterrupt, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(nodeMCUInterrupt), startSearch, CHANGE);
 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
 
-  // long distance = scanDistance();
-  // if (distance <= 30) {
-  //   halt();
-  //   changeDirection();
-  // } else { 
+  long distance = scanDistance();
+  if (distance <= 30) {
+    halt();
+    changeDirection();
+  } else { 
 
-  //     forward();
-  // }
-  // delay(500);
+      forward();
+  }
+  delay(500);
 
-  transmit();
-
-  receive();
 }
 
-//DEPRECATED FOR NOW - USING IR INSTEAD
+//DEPRECATED FOR NOW - still haven't chosen a signal to use
 
 //radio stuff
 //FOR TESTING ONLY- THE ROBOT WILL NOT TRASMIT DATA, IT'LL ONLY RECEIVE
@@ -112,11 +117,40 @@ void loop() {
 
 //----radio stuff over----//
 
+//start searching for beacon
+void startSearch() {
+  
+    //check if the interrupt was triggered by a rising edge
+    beaconID = Serial.read();
+    if (beaconID != 0) {
+      findBeacon();
+    }
+}
 
+
+//rotate till signal is relative to the robot
+void findBeacon() {
+
+  /*lets write the logic here:
+  1. IF cant find any beacon, keep rotating
+  2. WHEN  signal found, stop rotating
+    2.1 Rotate until the  pulse is at the center of the robot
+  3. Check  pulse matches the ID we're looking for
+  4. IF not, keep rotating
+  5. IF yes, stop rotating, move forward
+  6. give control to anti-collision system
+  7. do find beacon again when anti-collision causes robot to change direction //INCLUDE THIS FUNCTION IN THE changeDirection() function
+  8. 
+  */
+
+ 
+
+
+}
 
 
 //look around with servo, orient self correctly, reset servo, exit
-void changeDirection(){
+void changeDirection() {
 
   //check left
   servo.write(0);
@@ -200,7 +234,7 @@ void forward() {
   delay(200);
 }
 
-void backward(){
+void backward() {
 
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
