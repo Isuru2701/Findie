@@ -2,10 +2,7 @@
 #include <Arduino.h>
 
 #include <Servo.h>
-
-#include <RH_ASK.h>
-#include <SPI.h> // Not actually used but needed to compile
-
+#include <SPI.h>
 //function headers
 long scanDistance();
 
@@ -36,9 +33,6 @@ void receive();
 
 //objects
 Servo servo;
-
-RH_ASK transmitter;
-RH_ASK receiver;
 void setup() {
   // put your setup code here, to run once:
 
@@ -66,8 +60,6 @@ void setup() {
 	digitalWrite(in4, LOW);
 
 //radio stuff
-  transmitter.init();
-  receiver.init();
 
 }
 
@@ -89,35 +81,36 @@ void loop() {
   receive();
 }
 
+//DEPRECATED FOR NOW - USING IR INSTEAD
+
 //radio stuff
 //FOR TESTING ONLY- THE ROBOT WILL NOT TRASMIT DATA, IT'LL ONLY RECEIVE
-void transmit(){
+// void transmit(){
 
-  //TESTING ONLY, REPLACE L8R
-  char *msg = "Hello World!";
-  transmitter.send((uint8_t *)msg, strlen(msg));
-  transmitter.waitPacketSent();
-  delay(1000);
+//   //TESTING ONLY, REPLACE L8R
+//   char *msg = "Hello World!";
+//   transmitter.send((uint8_t *)msg, strlen(msg));
+//   transmitter.waitPacketSent();
+//   delay(1000);
 
-}
-
-
-//----radio stuff over----//
+// }
 
 //receive and decrypts a radio wave
-void receive() {
+// void receive() {
 
-  //TEST, REPLACE L8R
-  uint8_t buf[RH_ASK_MAX_MESSAGE_LEN];
-  uint8_t buflen = sizeof(buf);
-  if(receiver.recv(buf, &buflen)) {
-    Serial.print("Message: ");
-    Serial.println((char*)buf);
-  } else {
-    Serial.println("No message received");
-  }
+//   //TEST, REPLACE L8R
+//   uint8_t buf[RH_ASK_MAX_MESSAGE_LEN];
+//   uint8_t buflen = sizeof(buf);
+//   if(receiver.recv(buf, &buflen)) {
+//     Serial.print("Message: ");
+//     Serial.println((char*)buf);
+//   } else {
+//     Serial.println("No message received");
+//   }
 
-}
+// }
+
+//----radio stuff over----//
 
 
 
