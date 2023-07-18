@@ -1,0 +1,26 @@
+*{
+    background-color: burlywood;
+}
+
+body{
+    margin: 30px;
+    padding: 0;
+    padding-top: 320px;
+    padding-left: 580px;
+}
+button{
+    margin-right: 20px;
+    background-color: aliceblue;
+    justify-content: center;
+    width: 100px;
+    height: 30px;
+    color: black;
+    border: none;
+    cursor: pointer;
+  
+} 
+
+button:hover{
+    color: brown;
+    font-weight: 600;
+} 
