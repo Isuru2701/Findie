@@ -22,8 +22,8 @@ void turnLeft();
 #define servoPin 13
 
 //ultrasonic sensor
-#define echoPin 12
-#define trigPin 11
+#define echoPin 6
+#define trigPin 5
 
 //motor driver
 #define in1 10
@@ -38,6 +38,8 @@ void turnLeft();
 Servo servo;
 
 int beaconID = 0;
+int dist = 50;
+int wait = 150;
 
 void setup() {
   // put your setup code here, to run once:
@@ -75,7 +77,7 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   long distance = scanDistance();
-  if (distance <= 30) {
+  if (distance <= dist) {
     halt();
     changeDirection();
   } else { 
@@ -119,6 +121,8 @@ void loop() {
 
 //start searching for beacon
 void startSearch() {
+
+  halt();
   
     //check if the interrupt was triggered by a rising edge
     beaconID = Serial.read();
@@ -158,7 +162,7 @@ void changeDirection() {
 
   delay(2000);
 
-  if(distance > 30) {
+  if(distance > dist) {
 
     //turn left
     turnLeft();
@@ -175,7 +179,7 @@ void changeDirection() {
   
   delay(2000);
 
-  if(distance > 30) {
+  if(distance > dist) {
 
     //turn right
     turnRight();
@@ -191,6 +195,8 @@ void changeDirection() {
   //reset servo position
   servo.write(90);
   delay(1000);
+
+  reverse();
 
 }
 
@@ -231,7 +237,7 @@ void forward() {
   digitalWrite(in2, LOW);
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);
-  delay(200);
+  delay(wait);
 }
 
 void backward() {
@@ -240,7 +246,7 @@ void backward() {
   digitalWrite(in2, HIGH);
   digitalWrite(in3, LOW);
   digitalWrite(in4, HIGH);
-  delay(200);
+  delay(wait);
 
 }
 
@@ -250,7 +256,7 @@ void halt() {
   digitalWrite(in2, LOW);
   digitalWrite(in3, LOW);
   digitalWrite(in4, LOW);
-  delay(200);
+  delay(wait);
 
 
 }
@@ -261,7 +267,7 @@ void turnRight() {
   digitalWrite(in2, LOW);
   digitalWrite(in3, LOW);
   digitalWrite(in4, HIGH);
-  delay(200);
+  delay(wait);
 
 
 }
@@ -272,8 +278,18 @@ void turnLeft() {
   digitalWrite(in2, HIGH);
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);
-  delay(200);
+  delay(wait);
 
 }
+
+void reverse() {
+
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
+  delay(wait);
+}
+
 
 
